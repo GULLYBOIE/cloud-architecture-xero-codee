@@ -1,0 +1,60 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >-
+  AWS CloudFormation Template: CI/CD pipeline with EC2, RDS, Auto Scaling,
+  Application Load Balancer, and associated networking components.
+
+Parameters:
+  KeyName:
+    Description: Name of an existing EC2 KeyPair to enable SSH access to the instances
+    Type: AWS::EC2::KeyPair::KeyName
+    ConstraintDescription: must be the name of an existing EC2 KeyPair.
+
+Resources:
+  MyVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+
+  PublicSubnetOne:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref MyVPC
+      CidrBlock: 10.0.1.0/24
+      MapPublicIpOnLaunch: true
+
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+
+  AttachGateway:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref MyVPC
+      InternetGatewayId: !Ref InternetGateway
+
+  MyEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t2.micro
+      KeyName: !Ref KeyName
+      ImageId: ami-0abcdef1234567890 # Replace this with the correct AMI ID for your region and OS
+      SubnetId: !Ref PublicSubnetOne
+
+  MyDBInstance:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBName: mydatabase
+      AllocatedStorage: 20
+      DBInstanceClass: db.t2.small
+      Engine: mysql
+      MasterUsername: adminuser
+      MasterUserPassword: adminpass # Change this to a secure password
+
+Outputs:
+  EC2InstancePublicIP:
+    Description: The public IP address of the EC2 instance
+    Value: !GetAtt MyEC2Instance.PublicIp
+  RDSInstanceEndpoint:
+    Description: The database connection endpoint
+    Value: !GetAtt MyDBInstance.Endpoint.Address

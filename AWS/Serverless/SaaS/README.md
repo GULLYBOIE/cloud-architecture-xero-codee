@@ -39,7 +39,3 @@ Refer to the individual README files for detailed instructions on how to deploy 
 ## Contributing
 
 Contributions to this project are welcome. Please ensure that any changes are documented and that the IaC scripts are thoroughly tested in a development environment before submitting a pull request.
-
-## License
-
-This project is licensed under the MIT License.

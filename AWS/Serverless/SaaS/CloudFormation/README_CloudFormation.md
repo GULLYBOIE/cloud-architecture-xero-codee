@@ -1,7 +1,7 @@
 
 # CloudFormation Infrastructure
 
-This directory contains the AWS CloudFormation template for setting up the infrastructure as shown in the provided architecture diagram.
+AWS CloudFormation template for setting up the infrastructure as shown in the provided architecture diagram.
 
 ## Structure
 
